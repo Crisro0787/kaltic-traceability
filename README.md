@@ -30,9 +30,9 @@ Traceability event → canonical record → cryptographic hash → Cardano trans
 
 Founder & Technical Lead: Cristian Rojas
 
-Kaltic application: [PUT KALTIC URL HERE]
+Kaltic application: https://kaltic.app/
 
-Cardano / community profile: [PUT CARDANO FORUM OR X URL HERE]
+Cardano / community profile: @CrisRo0787
 
 ## Open Funding
 
