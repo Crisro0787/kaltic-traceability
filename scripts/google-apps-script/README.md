@@ -1,3 +1,12 @@
+Perfecto. Ahora crea un tercer archivo dentro de esa misma carpeta:
+
+```text
+scripts/google-apps-script/README.md
+```
+
+Y pega **todo esto tal cual**:
+
+````markdown
 # Google Apps Script Services
 
 Kaltic uses Google Apps Script as a lightweight supporting service for selected processing tasks in the current MVP.
@@ -38,3 +47,180 @@ The service expects the following Google Apps Script properties:
 ```text
 GOOGLE_MAPS_API_KEY
 PINATA_JWT
+````
+
+These credentials are intentionally not included in the repository.
+
+The public source also uses a placeholder for the Pinata gateway:
+
+```text
+https://YOUR_PINATA_GATEWAY/ipfs/
+```
+
+Replace it with an appropriate IPFS gateway before deployment.
+
+---
+
+### 2. Harvesting
+
+File:
+
+[`harvesting.gs`](harvesting.gs)
+
+This service supports the Harvesting Critical Tracking Event (CTE).
+
+It receives structured traceability data from Joget and constructs a harvesting record containing information such as:
+
+* immediate subsequent recipient;
+* commodity and variety;
+* quantity and unit of measure;
+* farm information;
+* growing area;
+* harvest dates;
+* reference document information.
+
+The resulting object is canonicalized before hashing.
+
+The service generates:
+
+```text
+harvest_id
+harvesting_json
+harvesting_json_hash
+harvesting_json_hash_1
+harvesting_json_hash_2
+```
+
+The complete SHA-256 hash is split into two 32-character values because the current Cardano transaction workflow stores the digest across two metadata fields.
+
+The values are returned to Joget and subsequently used by the harvesting workflow when submitting the corresponding Cardano transaction.
+
+---
+
+## Canonicalization
+
+Both services use deterministic JSON canonicalization before calculating SHA-256 hashes.
+
+Object keys are sorted recursively before serialization.
+
+Conceptually:
+
+```text
+Operational data
+      |
+      v
+Structured JSON
+      |
+      v
+Deterministic canonicalization
+      |
+      v
+SHA-256
+      |
+      v
+Record digest
+```
+
+This allows Kaltic to later verify whether an off-chain record corresponds to the cryptographic evidence associated with its blockchain transaction.
+
+---
+
+## Relationship with Joget
+
+The services are invoked from the main Kaltic Joget application.
+
+Current architecture:
+
+```text
+Kaltic UI
+    |
+    v
+Joget DX8
+    |
+    +--------------------------+
+    |                          |
+    v                          v
+Field service            Harvest service
+    |                          |
+    v                          v
+GeoJSON processing       Canonical record
+Satellite image          SHA-256 digest
+IPFS upload              Harvest identifier
+    |                          |
+    +-------------+------------+
+                  |
+                  v
+               Joget
+                  |
+                  v
+       Cardano integration
+```
+
+The sanitized Joget application is available at:
+
+[`../../joget/APP_kaltic_v1-public.jwa`](../../joget/APP_kaltic_v1-public.jwa)
+
+---
+
+## Google Apps Script Deployment
+
+Each service can be deployed as a Google Apps Script Web App.
+
+The Joget public configuration uses placeholders instead of the production deployment URLs:
+
+```text
+YOUR_PLOT_WEBAPP_ID
+YOUR_HARVESTING_WEBAPP_ID
+```
+
+A deployment must be configured with the permissions required for:
+
+* Google Sheets;
+* URL Fetch requests;
+* Script Properties.
+
+The field-registration service additionally requires access to the configured Google Maps and Pinata APIs.
+
+---
+
+## Data Storage
+
+The current prototype records processing results in Google Sheets for development, validation and traceability of service execution.
+
+The spreadsheets themselves are not included in this repository because they may contain operational or test data.
+
+No production or pilot data is required to review the source code.
+
+---
+
+## Security
+
+Secrets must never be hardcoded in these scripts.
+
+The repository intentionally excludes:
+
+* Google Maps API keys;
+* Pinata JWTs;
+* private Google Apps Script deployment URLs;
+* user or pilot data;
+* wallet credentials;
+* signing keys.
+
+Sensitive configuration should be provided through Google Apps Script Properties or another secure secrets-management mechanism.
+
+---
+
+## Current Scope
+
+These scripts belong to the existing Kaltic MVP running with Cardano Preprod.
+
+They are not an implementation of CIP-0170.
+
+The proposed CIP-0170 integration is a separate next stage that would extend the existing traceability architecture with verifiable organizational identities and signed organizational attestations.
+
+```
+
+Una precisión que vale la pena conservar: en tu código de campo efectivamente las credenciales de Maps y Pinata se obtienen mediante `PropertiesService`, no están hardcodeadas. :contentReference[oaicite:0]{index=0} También está visible la cadena real `GeoJSON → canonicalización → SHA-256`, así que el README describe comportamiento verificable del código y no solo afirmaciones de marketing. :contentReference[oaicite:1]{index=1}
+
+Cuando hagas commit de este README, **yo pararía de agregar cosas al GitHub por ahora**. Ya tendremos suficiente para regresar a la propuesta: software exportable, código auxiliar, arquitectura y evidencia on-chain. El siguiente paso debería ser revisar el campo de **Team** y convertir el antiguo problema de “Founder unverifiable / technical competence not established” en uno de los puntos fuertes de la resubmission. 
+```
