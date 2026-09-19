@@ -1,0 +1,16 @@
+{
+  "name": "@kaltic/concept",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Kaltic traceability documentation and concept art",
+  "scripts": {
+    "build": "node build.mjs",
+    "build:concept": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@myriaddreamin/typst-ts-node-compiler": "0.7.0"
+  }
+}

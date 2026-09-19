@@ -1,0 +1,9 @@
+{
+  "name": "@kaltic/pitch-deck",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": { "build": "node build.mjs", "test": "node --test presentation.test.mjs" },
+  "devDependencies": { "@myriaddreamin/typst-ts-node-compiler": "0.7.0" }
+}
