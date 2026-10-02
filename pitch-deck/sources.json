@@ -1,0 +1,27 @@
+{
+  "US2": {
+    "short": "FDA / Sonora cucumber outbreak",
+    "url": "https://www.fda.gov/food/outbreaks-foodborne-illness/outbreak-investigation-salmonella-cucumbers-november-2024",
+    "detail": "Final update 8 January 2025: 113 cases, 23 states; traceback identified Agrotato, Sonora. Not a Kaltic customer or proof of preventability."
+  },
+  "MX4": {
+    "short": "SE / rule 2.2.18 BIS",
+    "url": "https://www.snice.gob.mx/~oracle/SNICE_DOCS/ACUERDO-REGLAS-SE-02ABRIL2026-BIBLIOTECA_20260520-20260520.pdf",
+    "detail": "SE reference compilation through 2 April 2026, PDF pages 36–38: tomato exporter registry, signed request, SNICE Excel and SRRC adhesion; DGFCCE issues notices. Consult underlying DOF instruments for authoritative law."
+  },
+  "MX5": {
+    "short": "Mexico / Ley Aduanera",
+    "url": "https://www.diputados.gob.mx/LeyesBiblio/pdf/LAdua.pdf",
+    "detail": "Articles 36, 36-A II, 40–41 and 43: electronic export declaration and attachments, broker representation, customs examination selection. Consolidated reform 19 November 2025."
+  },
+  "US4": {
+    "short": "FDA / FSVP responsibilities",
+    "url": "https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-foreign-supplier-verification-programs-fsvp-importers-food-humans-and-animals",
+    "detail": "Covered U.S. importers evaluate suppliers and maintain verification programs; activities can include audits, testing and records review. Exemptions and modified requirements apply."
+  },
+  "US1": {
+    "short": "FDA / Food Traceability Rule",
+    "url": "https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-requirements-additional-traceability-records-certain-foods",
+    "detail": "FSMA section 204; 21 CFR Part 1 Subpart S. CTE/KDE records, exemptions, foreign scope, traceability plan, retrieval. FDA describes proposed extension and congressional non-enforcement direction before 20 July 2028; do not describe proposal as finalized."
+  }
+}

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640">
+  <defs>
+    <linearGradient id="ground" x2="1" y2="1"><stop stop-color="#365C45"/><stop offset="1" stop-color="#162C23"/></linearGradient>
+    <clipPath id="disc"><circle cx="320" cy="320" r="266"/></clipPath>
+    <pattern id="rows" width="17" height="17" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><path d="M0 0V17" stroke="#D2C69B" stroke-width="2" opacity=".65"/></pattern>
+  </defs>
+  <circle cx="320" cy="320" r="299" fill="none" stroke="#C4B583" stroke-opacity=".3"/>
+  <circle cx="320" cy="320" r="282" fill="none" stroke="#C4B583" stroke-opacity=".65" stroke-width=".7"/>
+  <g clip-path="url(#disc)">
+    <circle cx="320" cy="320" r="266" fill="url(#ground)"/>
+    <g fill="none" stroke="#A9C7B5" stroke-width="1" opacity=".35">
+      <path d="M-20 120C160-30 202 210 400 76S670 50 710 90"/>
+      <path d="M-20 138C160-12 202 228 400 94S670 68 710 108"/>
+      <path d="M-20 156C160 6 202 246 400 112S670 86 710 126"/>
+      <path d="M-20 174C160 24 202 264 400 130S670 104 710 144"/>
+      <path d="M-20 192C160 42 202 282 400 148S670 122 710 162"/>
+      <path d="M-20 210C160 60 202 300 400 166S670 140 710 180"/>
+      <path d="M-20 228C160 78 202 318 400 184S670 158 710 198"/>
+      <path d="M-20 246C160 96 202 336 400 202S670 176 710 216"/>
+      <path d="M-20 264C160 114 202 354 400 220S670 194 710 234"/>
+      <path d="M-20 282C160 132 202 372 400 238S670 212 710 252"/>
+      <path d="M-20 300C160 150 202 390 400 256S670 230 710 270"/>
+      <path d="M-20 318C160 168 202 408 400 274S670 248 710 288"/>
+      <path d="M-20 336C160 186 202 426 400 292S670 266 710 306"/>
+      <path d="M-20 354C160 204 202 444 400 310S670 284 710 324"/>
+      <path d="M-20 372C160 222 202 462 400 328S670 302 710 342"/>
+      <path d="M-20 390C160 240 202 480 400 346S670 320 710 360"/>
+      <path d="M-20 408C160 258 202 498 400 364S670 338 710 378"/>
+      <path d="M-20 426C160 276 202 516 400 382S670 356 710 396"/>
+      <path d="M-20 444C160 294 202 534 400 400S670 374 710 414"/>
+      <path d="M-20 462C160 312 202 552 400 418S670 392 710 432"/>
+      <path d="M-20 480C160 330 202 570 400 436S670 410 710 450"/>
+      <path d="M-20 498C160 348 202 588 400 454S670 428 710 468"/>
+      <path d="M-20 516C160 366 202 606 400 472S670 446 710 486"/>
+      <path d="M-20 534C160 384 202 624 400 490S670 464 710 504"/>
+      <path d="M-20 552C160 402 202 642 400 508S670 482 710 522"/>
+      <path d="M-20 570C160 420 202 660 400 526S670 500 710 540"/>
+      <path d="M-20 588C160 438 202 678 400 544S670 518 710 558"/>
+      <path d="M-20 606C160 456 202 696 400 562S670 536 710 576"/>
+    </g>
+    <path d="M146 277L353 211L468 362L240 447Z" fill="#49654B" stroke="#D2C69B" stroke-width="2"/>
+    <path d="M146 277L353 211L468 362L240 447Z" fill="url(#rows)"/>
+    <path d="M22 489C153 477 295 482 330 399S387 364 488 262 557 150 670 152" fill="none" stroke="#F1F4E9" stroke-width="3" opacity=".8"/>
+    <g fill="#F1F4E9"><circle cx="146" cy="277" r="4"/><circle cx="353" cy="211" r="4"/><circle cx="468" cy="362" r="4"/><circle cx="240" cy="447" r="4"/></g>
+  </g>
+  <path d="M320 8V33M320 607V632M8 320H33M607 320H632" stroke="#C4B583" stroke-width="1"/>
+  <circle cx="320" cy="320" r="6" fill="#D2C69B"/>
+  <circle cx="320" cy="320" r="15" fill="none" stroke="#D2C69B"/>
+</svg>
