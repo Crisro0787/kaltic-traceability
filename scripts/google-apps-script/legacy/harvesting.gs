@@ -1,3 +1,16 @@
+// LEGACY PROTOTYPE SERVICE
+// This file predates the final September 2026 cut-based pilot architecture.
+// It is retained for transparency and should not be treated as the final Kaltic workflow.
+//
+// Final validation used cuts as operational off-chain source records, with
+// pilot-specific downstream delivery, transformation, and aggregation events
+// producing selected Cardano Preprod evidence.
+//
+// See:
+// - ../../../docs/architecture.md
+// - ../../../docs/pilot-workflows.md
+// - ../../../docs/testnet-evidence.md
+
 const SCRIPT_VERSION = "HARVESTING_V1";
 
 function doGet(e) {

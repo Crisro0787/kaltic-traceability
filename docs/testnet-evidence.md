@@ -1,102 +1,123 @@
 # Cardano Preprod Evidence
 
-This document provides public on-chain evidence of the current Kaltic agricultural traceability MVP interacting with the Cardano Preprod network.
+This document provides representative public on-chain evidence from the Kaltic agricultural traceability prototype validated under Project Catalyst Fund 11.
 
-These transactions were created by the existing prototype before the proposed CIP-0170 organizational identity integration.
+The final pilot architecture does **not** place every operational record on-chain. Operational records such as crop and cut-level data remain in the application layer. Selected critical records — including field identity and pilot-specific downstream events — are linked to Cardano Preprod transactions.
 
-They demonstrate the current technical foundation of Kaltic: agricultural objects and traceability events can be created in the application and linked to public Cardano transactions.
+The four examples below represent the principal traceability patterns exercised during final validation.
 
 ---
 
-## 1. Agricultural Field Registration and NFT Minting
+## 1. Field / origin evidence
 
-**Kaltic workflow:** Agricultural Field / Plot Registration  
+**Kaltic record:** `FIELD-000024`  
 **Network:** Cardano Preprod  
 **Transaction ID:**
 
-`8c7e02a0c3056d33587999337def2e03828510f993a92f70d671b8fac3a17292`
+`efcfe3f904ba84d0f6d14dcc1dbd303e9b689f8fbfa261a05238b846dd4ab683`
 
-**Cardanoscan:**
+**Explorer:**
 
-https://preprod.cardanoscan.io/transaction/8c7e02a0c3056d33587999337def2e03828510f993a92f70d671b8fac3a17292
+https://preprod.cardanoscan.io/transaction/efcfe3f904ba84d0f6d14dcc1dbd303e9b689f8fbfa261a05238b846dd4ab683
 
 ### What it demonstrates
 
-This transaction corresponds to the registration of an agricultural field in the Kaltic MVP and the minting of its blockchain asset.
-
-The current application captures information about the field, including its agricultural organization, field name, geographic area and a hash of its geographic information.
-
-Kaltic then uses Cardano to mint an NFT representing the registered field and stores the resulting transaction information in the application.
-
-This provides a persistent on-chain identifier that can be referenced by subsequent traceability events.
+This record represents agricultural field identity in the prototype and shows how an application-level origin object can be associated with persistent Cardano evidence.
 
 ---
 
-## 2. Harvesting Traceability Event
+## 2. Blueberry first-mile delivery
 
-**Kaltic workflow:** Harvesting Critical Tracking Event (CTE)  
+**Pilot:** Blue Berry Trade and Company  
+**Kaltic record:** `DEL-000001`  
+**Validated endpoint:** Delivery  
 **Network:** Cardano Preprod  
 **Transaction ID:**
 
-`2a42fb79867b948d5990dd564abee307b404de54cdcdd6d78dea84a4039b472b`
+`23cb018a0ff96f9c08ed6a56744618be47c0d6dbf3af49fa4aad16c95c205556`
 
-**Cardanoscan metadata:**
+**Explorer:**
 
-https://preprod.cardanoscan.io/transaction/2a42fb79867b948d5990dd564abee307b404de54cdcdd6d78dea84a4039b472b?tab=metadata
+https://preprod.cardanoscan.io/transaction/23cb018a0ff96f9c08ed6a56744618be47c0d6dbf3af49fa4aad16c95c205556
 
 ### What it demonstrates
 
-This transaction corresponds to a harvesting traceability event generated through Kaltic.
+The blueberry pilot tested preservation of producer and plot origin through operational cuts, inventory and first-mile delivery.
 
-The MVP creates a structured harvesting record containing traceability information such as the event type, harvest identifier, commodity, variety, farm, field, harvest dates and cryptographic hashes associated with the structured record.
-
-The transaction anchors selected evidence from the event on Cardano while the complete operational record remains in the Kaltic application layer.
-
-The resulting transaction ID is linked back to the traceability record and can be independently inspected through a Cardano explorer.
+Cut-level data remained part of the operational application context. The downstream delivery record is the selected event represented here with independently inspectable Cardano evidence.
 
 ---
 
-## Current Architecture Limitation
+## 3. Coffee transformation
 
-The current MVP uses a Kaltic-controlled administrative wallet to submit the blockchain transactions.
+**Pilot:** Cafe Chichini  
+**Kaltic record:** `PERG-000002`  
+**Validated endpoint:** Wet-milling / parchment transformation  
+**Network:** Cardano Preprod  
+**Transaction ID:**
 
-This is sufficient for the current prototype to demonstrate:
+`264ad0ff1b38382b363279160811cbc18db2a38b3668f1b215783cd069dcd197`
 
-- creation of agricultural traceability records;
-- cryptographic integrity of records;
-- public Cardano anchoring;
-- linkage between agricultural objects and traceability events;
-- independent inspection of blockchain transactions.
+**Explorer:**
 
-However, the blockchain transaction itself does not yet provide cryptographic evidence that the agricultural organization represented in the record was the organization that made the claim.
+https://preprod.cardanoscan.io/transaction/264ad0ff1b38382b363279160811cbc18db2a38b3668f1b215783cd069dcd197
 
-This is the identity gap addressed by the proposed CIP-0170 integration.
+### What it demonstrates
+
+The coffee pilot tested whether origin relationships remained visible when product changed form through wet milling.
+
+The transformation record links the resulting parchment-coffee object to its upstream operational context and provides Cardano Preprod evidence for the selected event.
 
 ---
 
-## Proposed CIP-0170 Extension
+## 4. Malanga multi-source aggregation
 
-The proposed next stage introduces verifiable organizational identity and organizational attestations.
+**Pilot:** Empacadora El Remolino de Santa Rosa  
+**Kaltic record:** `AGG-MAL-000002`  
+**Validated endpoint:** Aggregated harvest lot  
+**Network:** Cardano Preprod  
+**Transaction ID:**
 
-Current model:
+`49aeb09beabbde293da540314f97f6c789aa3a971cbb32a07e47f24f42e49726`
 
-Agricultural event  
-→ Kaltic structured record  
-→ cryptographic evidence  
-→ Kaltic administrative wallet  
-→ Cardano Preprod
+**Explorer:**
 
-Proposed model:
+https://preprod.cardanoscan.io/transaction/49aeb09beabbde293da540314f97f6c789aa3a971cbb32a07e47f24f42e49726
 
-Organization  
-→ KERI AID  
-→ agricultural traceability event  
-→ canonical record digest  
-→ CIP-0170 attestation  
-→ organization's external wallet  
-→ Cardano Mainnet  
-→ verification in Kaltic
+### What it demonstrates
 
-This extends Kaltic from proving that a traceability record was anchored and has not been silently modified to also enabling verification of which organization is cryptographically accountable for the claim.
+The malanga pilot tested preservation of multiple producer and field origins when several operational cut records were combined into one aggregated lot.
 
-The transactions above represent the existing technical foundation. CIP-0170 organizational identity attestations are proposed future work and are not presented as functionality already implemented.
+The final aggregation record was generated after correcting required-source selection and payload issues discovered during testing.
+
+---
+
+## Validation totals
+
+Across all three final pilot evidence sets:
+
+- **18 blockchain confirmations** were reported.
+- **17 transaction IDs** were individually enumerated.
+- The Pilot 3 source summary reports one additional confirmation for which no transaction ID is listed in the source transaction table.
+
+That discrepancy is intentionally preserved. This repository does not invent or infer the missing identifier.
+
+## Scope and limitations
+
+These transactions demonstrate that selected Kaltic traceability records reached Cardano Preprod and can be independently inspected.
+
+They do not, by themselves, prove:
+
+- the truthfulness of source data entered by a participant;
+- physical possession or ownership of a commodity;
+- regulatory compliance;
+- production readiness;
+- full farm-to-consumer coverage;
+- cryptographic accountability of the agricultural organization represented in the record.
+
+The project uses Cardano as an evidence layer within a broader traceability system. The operational meaning of each transaction depends on the application records and the explicit relationships preserved by Kaltic.
+
+See also:
+
+- [`architecture.md`](architecture.md)
+- [`pilot-workflows.md`](pilot-workflows.md)
