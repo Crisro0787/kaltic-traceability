@@ -1,130 +1,159 @@
-````markdown
 # Kaltic Technical Architecture
 
 ## Overview
 
-Kaltic is an agricultural traceability platform built with a hybrid architecture.
+Kaltic is an agricultural traceability prototype built with a **hybrid architecture**.
 
-The application layer manages operational traceability workflows and records, while Cardano provides a public verification layer for selected agricultural objects and traceability events.
+The application layer manages operational workflows, identities, permissions, forms, records and presentation. A separate traceability layer preserves persistent object identities, event meaning and source/predecessor relationships. Cardano Preprod is used as an independently inspectable evidence layer for selected critical events.
 
-The current MVP runs on the Cardano Preprod network.
+The final Catalyst F11 interpretation is therefore broader than a single token sequence: the durable core is **objects + events + relationships + verifiable evidence**.
 
----
-
-## Current MVP Architecture
+## Final prototype model
 
 ```text
-Agricultural user
-        |
-        v
-     Kaltic UI
-        |
-        v
-     Joget DX8
-        |
-        +-------------------+
-        |                   |
-        v                   v
-Traceability records   Supporting services
-        |              (Google Apps Script)
-        |                   |
-        +---------+---------+
-                  |
-                  v
-      Canonical / structured data
-                  |
-                  v
-          Cryptographic hashes
-                  |
-                  v
-       Cardano integration layer
-                  |
-          +-------+-------+
-          |               |
-          v               v
-     NFT minting      Transactions
-          |               |
-          +-------+-------+
-                  |
-                  v
-          Cardano Preprod
-                  |
-                  v
-       Transaction evidence
-                  |
-                  v
-    Kaltic record / Digital
-        Product Passport
-````
+Agricultural organization / user
+            |
+            v
+        Kaltic UI
+            |
+            v
+         Joget DX8
+            |
+     +------+----------------------+
+     |                             |
+     v                             v
+Operational records        Traceability relationships
+     |                     (source / predecessor links)
+     |                             |
+     +--------------+--------------+
+                    |
+                    v
+          Selected critical event
+                    |
+                    v
+           Cardano integration
+                    |
+                    v
+            Cardano Preprod
+                    |
+                    v
+       Transaction / asset evidence
+                    |
+                    v
+     Kaltic history / product passport
+```
 
----
+Cardano is not used as the operational database. Detailed operational and potentially sensitive records remain in the application layer.
 
-## Application Layer
+## Operational layer
 
 The main application is implemented in **Joget DX8**.
 
-The public sanitized application export is available at:
+It supports, depending on the configured scenario:
 
-[`../joget/APP_kaltic_v1-public.jwa`](../joget/APP_kaltic_v1-public.jwa)
+- organizations and users;
+- producers;
+- agricultural fields / plots;
+- crop records;
+- cut-level records;
+- inventory;
+- delivery;
+- transformation;
+- aggregation;
+- supporting photos and documents;
+- Digital Product Passport / traceability views.
 
-The Joget application defines the principal agricultural workflows, forms, application logic and Cardano integrations used by the MVP.
+### Cuts
 
-### Implemented workflows
+In the final pilot architecture, **cuts are operational source records**.
 
-The current application contains workflows for:
+They capture the agricultural production context used by later traceability events, but they do not independently require an on-chain transaction.
 
-* farm registration;
-* agricultural field / plot registration;
-* cooler registration;
-* administrative account setup;
-* harvesting traceability events.
+Conceptually:
 
-The application uses approval and routing logic to connect registration, verification and blockchain operations.
+```text
+Producer / field / crop
+          |
+          v
+         Cut
+   (off-chain record)
+          |
+    +-----+-----+------+
+    |           |      |
+    v           v      v
+ Delivery  Transformation  Aggregation
+    |           |             |
+    +-----------+-------------+
+                |
+                v
+       selected Cardano evidence
+```
 
----
+This distinction is important: not every operational event needs to be placed on-chain to preserve traceability.
 
-## Farm Registration
+## Traceability layer
 
-Kaltic registers agricultural organizations and their operational information in the application layer.
+Kaltic models supply-chain history through identifiable records and explicit event relationships.
 
-Farm information can subsequently be referenced by fields and harvesting records instead of duplicating the same information in each event.
+The final research interpretation emphasizes:
 
-At the current MVP stage, operational and potentially sensitive business information remains off-chain.
+- persistent object identifiers;
+- explicit business-event semantics;
+- source and predecessor references;
+- continuity when product changes custody;
+- continuity when product changes form;
+- continuity when multiple sources are combined;
+- reconstruction of history through linked records.
 
----
+Three relationship patterns were validated during Milestone 3:
 
-## Agricultural Field Registration
+1. **Delivery / first-mile movement** — preserve producer and plot origin as product moves.
+2. **Transformation** — preserve origin when an input becomes a different product form.
+3. **Aggregation** — preserve multiple origins when several source records are combined.
 
-A farm user can register an agricultural field or plot.
+These patterns are documented in [`pilot-workflows.md`](pilot-workflows.md).
 
-The application supports:
+## Cardano evidence layer
 
-* field identification;
-* farm association;
-* geographic polygon capture;
-* GeoJSON representation;
-* calculated field area;
-* geographic-data hashing;
-* blockchain transaction linkage.
+Selected critical records are associated with Cardano Preprod transactions.
 
-The interface uses Leaflet, Leaflet Draw and Turf.js to allow a user to draw the agricultural area and calculate its surface.
+The implementation demonstrates that Kaltic can:
 
-### Current blockchain flow
+- create and retain application-level traceability records;
+- create persistent field / plot identifiers;
+- submit selected traceability evidence to Cardano Preprod;
+- retain resulting transaction IDs;
+- expose blockchain evidence for independent inspection.
+
+Representative transactions are documented in [`testnet-evidence.md`](testnet-evidence.md).
+
+## Field registration
+
+Field registration remains one of the clearest object-identity examples in the current MVP.
+
+The application can capture:
+
+- field identification;
+- farm association;
+- geographic polygon;
+- GeoJSON representation;
+- calculated area;
+- geographic-data hash;
+- Cardano transaction linkage.
+
+The current MVP uses NFT-based field identification on Cardano Preprod.
 
 ```text
 Field registration
       |
       v
-Geographic information
-      |
-      v
-GeoJSON + area
+GeoJSON / area
       |
       v
 Cryptographic hash
       |
       v
-Field NFT mint
+Field NFT
       |
       v
 Cardano Preprod
@@ -133,265 +162,99 @@ Cardano Preprod
 Transaction ID stored in Kaltic
 ```
 
-The current implementation uses the Cardano Blockchain Pack for Joget to mint the field NFT.
+## Pilot-specific downstream events
 
----
+### Delivery
 
-## Harvesting Traceability
+The blueberry pilot tested origin continuity from producer and field through operational cuts and inventory into a delivery record.
 
-Kaltic also implements a harvesting Critical Tracking Event (CTE).
+The downstream delivery event generated Cardano Preprod evidence while referencing its upstream operational context.
 
-The harvesting workflow captures structured traceability information including fields such as:
+### Transformation
 
-* event type;
-* harvest identifier;
-* commodity;
-* variety;
-* quantity and unit of measure;
-* harvest start and end dates;
-* farm;
-* agricultural field;
-* immediate subsequent recipient;
-* cryptographic hashes of the structured harvesting record.
+The coffee pilot tested origin continuity through wet-milling transformation.
 
-The complete operational record remains in the application layer.
-
-Selected evidence is submitted to Cardano and the resulting transaction ID is associated with the Kaltic record.
-
-### Current harvesting flow
-
-```text
-Harvest event
-      |
-      v
-Joget harvesting form
-      |
-      v
-Structured traceability record
-      |
-      v
-Supporting processing service
-      |
-      v
-Cryptographic record hash
-      |
-      v
-Cardano transaction metadata
-      |
-      v
-Cardano Preprod
-      |
-      v
-Transaction ID
-      |
-      v
-Kaltic traceability record
-```
+The purpose was to preserve traceability when the product changed form. Successful records included parchment-coffee transformation evidence on Cardano Preprod.
 
----
+### Aggregation
 
-## Supporting Services
+The malanga pilot tested preservation of multiple producer and field origins when several cut records were combined into an aggregated lot.
 
-Some processing functions are provided through Google Apps Script web services.
+The final aggregation record generated Cardano Preprod evidence after correcting selection and payload issues identified during testing.
 
-These services currently support operations such as:
+## Supporting services
 
-* processing agricultural field data;
-* generating geographic-data hashes;
-* preparing structured harvesting records;
-* generating record identifiers;
-* generating cryptographic hashes returned to the Joget workflow.
+Google Apps Script is used for selected processing functions, including geographic processing and earlier prototype experiments.
 
-Service deployment identifiers and credentials are intentionally removed from the public Joget export.
+Public scripts are available under:
 
-The public configuration uses placeholders:
+[`../scripts/google-apps-script/`](../scripts/google-apps-script/)
 
-```text
-YOUR_PLOT_WEBAPP_ID
-YOUR_HARVESTING_WEBAPP_ID
-YOUR_BLOCKFROST_PROJECT_KEY
-```
+An earlier harvesting service is retained under `legacy/` for transparency. It predates the final cut-based pilot model and should not be interpreted as the final architecture.
 
----
+## Wallet and identity model
 
-## Cardano Integration
+The current prototype uses a Kaltic-controlled administrative blockchain account for principal minting and transaction operations.
 
-The current MVP integrates Cardano through the Cardano Blockchain Pack for Joget.
+This is sufficient to demonstrate public anchoring and record linkage, but it does not independently prove that the agricultural organization represented in a record cryptographically made the claim.
 
-The application configuration includes operations for:
+That distinction motivated a separate future direction around verifiable organizational identity and CIP-0170 / KERI attestations.
 
-* blockchain account generation;
-* NFT minting;
-* Cardano transaction submission;
-* transaction ID capture;
-* explorer links;
-* Cardano Preprod backend access.
+This proposed work is **not part of the completed F11 prototype**.
 
-Third-party plugin binaries are not redistributed in this repository.
+## Privacy model
 
----
+The architecture separates:
 
-## Current Wallet Model
+### Application layer
 
-The current prototype uses a Kaltic-controlled administrative blockchain account for the principal minting and transaction operations.
+- detailed operational records;
+- business contact information;
+- sensitive supply-chain information;
+- complete workflow context;
+- supporting images and documents.
 
-Conceptually:
+### Cardano evidence layer
 
-```text
-Farm / supply-chain actor
-          |
-          v
-     Kaltic record
-          |
-          v
- Kaltic administrative wallet
-          |
-          v
-        Cardano
-```
+- selected identifiers;
+- transaction references;
+- cryptographic evidence;
+- public metadata where appropriate.
 
-This architecture allows the MVP to demonstrate:
+This provides independent verification without requiring the complete operational dataset to be published permanently on-chain.
 
-* public anchoring of traceability evidence;
-* cryptographic record integrity;
-* field NFT creation;
-* traceability-event transactions;
-* linkage between application records and Cardano transactions.
+## Reliability findings
 
-However, it creates an important limitation:
+The final pilot validation exposed several engineering requirements before broader deployment:
 
-**the transaction proves that Kaltic submitted the blockchain evidence, but does not independently prove that the agricultural organization represented in the record was the organization that cryptographically made the claim.**
+- environment and credential preflight checks;
+- validation of required selections and payloads;
+- idempotency controls;
+- explicit transaction states;
+- image-size handling;
+- exact timing instrumentation;
+- improved operational explanation of blockchain evidence.
 
----
+These are documented limitations and next-step requirements, not hidden failures.
 
-## Identity Gap
+## Public Joget snapshot
 
-There are two different verification questions:
+The repository contains:
 
-### Current MVP
+[`../joget/APP_kaltic_v1-1-20260824012721.jwa`](../joget/APP_kaltic_v1-1-20260824012721.jwa)
 
-**Has this traceability record been anchored and can its integrity be independently checked?**
-
-Kaltic already provides this technical foundation.
-
-### Proposed CIP-0170 integration
-
-**Which verifiable organization is cryptographically accountable for this traceability claim?**
-
-This is the next technical problem Kaltic proposes to solve.
-
----
-
-## Proposed CIP-0170 Architecture
-
-The proposed integration introduces persistent organizational identity using KERI and CIP-0170 attestations.
-
-The intended architecture is:
-
-```text
-Agricultural organization
-          |
-          v
-       KERI AID
-          |
-          v
-   Traceability event
-          |
-          v
- Canonical record / digest
-          |
-          v
- CIP-0170 attestation
-          |
-          v
-Organization's external wallet
-          |
-          v
-     Cardano Mainnet
-          |
-          v
- Kaltic verifier / indexer
-          |
-          v
-Verified Digital Product Passport
-```
-
-Instead of Kaltic being the only blockchain actor, participating organizations would use their own external wallets and organizational identities.
-
-A traceability claim could therefore be verified against both:
-
-1. the integrity of the agricultural record; and
-2. the identity of the organization responsible for that claim.
-
----
-
-## Current vs Proposed Architecture
-
-| Capability                               | Current MVP       | Proposed CIP-0170 Phase |
-| ---------------------------------------- | ----------------- | ----------------------- |
-| Agricultural workflows                   | Implemented       | Reused                  |
-| Structured traceability records          | Implemented       | Reused                  |
-| Record hashing                           | Implemented       | Reused                  |
-| Cardano transactions                     | Preprod           | Mainnet                 |
-| Field NFT minting                        | Implemented       | Reused where applicable |
-| Digital Product Passport                 | Implemented       | Extended                |
-| Organizational identity                  | Not implemented   | KERI AID                |
-| Organizational attestations              | Not implemented   | CIP-0170                |
-| Transaction wallet                       | Kaltic-controlled | Organization-controlled |
-| Verifiable organizational accountability | No                | Yes                     |
-
----
-
-## Privacy Model
-
-Kaltic does not require all agricultural information to be published on-chain.
-
-The intended model separates:
-
-**Application layer**
-
-* detailed operational records;
-* business contact information;
-* sensitive supply-chain information;
-* complete regulatory records.
-
-**Cardano verification layer**
-
-* cryptographic evidence;
-* selected public metadata where appropriate;
-* identifiers;
-* attestations;
-* transaction references.
-
-This enables public verification without requiring sensitive supply-chain datasets to be permanently exposed on-chain.
-
----
-
-## Public On-chain Evidence
-
-Existing Cardano Preprod transactions generated by the MVP are documented in:
-
-[`testnet-evidence.md`](testnet-evidence.md)
-
-These transactions demonstrate the existing technical foundation.
-
-They are not presented as evidence that CIP-0170 is already implemented.
-
----
+This is a sanitized **August 2026 snapshot** of the MVP. Some pilot-specific adaptations used during September validation were configured after that export. See [`../joget/README.md`](../joget/README.md).
 
 ## Security
 
 The public repository intentionally excludes:
 
-* wallet mnemonic phrases;
-* signing keys;
-* minting policy secret keys;
-* Blockfrost credentials;
-* production service identifiers;
-* user and pilot records;
-* private deployment configuration.
+- wallet mnemonic phrases;
+- signing keys;
+- minting-policy secret keys;
+- Blockfrost credentials;
+- private deployment identifiers;
+- user and pilot records;
+- private service configuration.
 
-The public Joget package is a sanitized version of the working application export.
-
-```
-```
+The repository is intended to document the architecture and public prototype evidence without exposing operational secrets or participant data.
